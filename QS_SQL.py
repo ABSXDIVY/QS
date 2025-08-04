@@ -6,7 +6,7 @@ import pandas as pd
 import time
 import re
 from sqlalchemy import create_engine, text, exc
-from datetime import datetime
+from datetime import datetime, date
 
 # 数据库配置
 DB_CONFIG = {
@@ -16,14 +16,15 @@ DB_CONFIG = {
     'database': 'qs',
     'port': 3306,
     'charset': 'utf8mb4',
-    'collation': 'utf8mb4_unicode_ci'  # 统一排序规则
+    'collation': 'utf8mb4_unicode_ci'
 }
 
 
 def check_and_create_table(engine):
-    """检查并创建正式表结构，指定统一的排序规则"""
+    """检查并创建支持历史数据的表结构"""
     try:
         with engine.connect() as conn:
+            # 检查表是否存在
             result = conn.execute(text("""
                                        SELECT COUNT(*)
                                        FROM information_schema.tables
@@ -32,16 +33,19 @@ def check_and_create_table(engine):
                                        """), {"db": DB_CONFIG['database']})
 
             if result.scalar() == 0:
-                print("创建正式表 university_rank...")
+                print("创建支持历史数据的表 university_rank...")
                 conn.execute(text("""
                                   CREATE TABLE university_rank
                                   (
-                                      university_name VARCHAR(255) PRIMARY KEY,
-                                      `rank`          INT      NOT NULL,
+                                      id              INT AUTO_INCREMENT PRIMARY KEY,                  # 自增主键
+                                      university_name VARCHAR(255) NOT NULL,
+                                      `rank`          INT          NOT NULL,
                                       overall_score   DECIMAL(10, 2),
                                       location        VARCHAR(255),
-                                      create_time     DATETIME NOT NULL,
-                                      update_time     DATETIME NOT NULL,
+                                      crawl_date      DATE         NOT NULL,                           # 爬取日期（每月1号）
+                                      create_time     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP, # 记录插入时间
+                                      INDEX idx_crawl_date (crawl_date),                               # 按日期查询索引
+                                      INDEX idx_university (university_name),                          # 按大学名称查询索引
                                       INDEX idx_rank (`rank`)
                                   ) ENGINE = InnoDB
                                     DEFAULT CHARSET = :charset
@@ -51,21 +55,11 @@ def check_and_create_table(engine):
                                  "collation": DB_CONFIG['collation']
                              })
                 conn.commit()
-                print("正式表创建成功")
+                print("表创建成功")
             else:
-                print("检查正式表排序规则...")
-                conn.execute(text("""
-                                  ALTER TABLE university_rank
-                                      CONVERT TO CHARACTER SET :charset
-                                          COLLATE :collation;
-                                  """), {
-                                 "charset": DB_CONFIG['charset'],
-                                 "collation": DB_CONFIG['collation']
-                             })
-                conn.commit()
-                print("正式表排序规则已确认")
+                print("表已存在，确认结构兼容性")
     except exc.SQLAlchemyError as e:
-        print(f"正式表操作失败: {str(e)}")
+        print(f"表操作失败: {str(e)}")
         raise
 
 
@@ -74,7 +68,6 @@ def init_database():
         engine = create_engine(
             f"mysql+pymysql://{DB_CONFIG['user']}:{DB_CONFIG['password']}@{DB_CONFIG['host']}:"
             f"{DB_CONFIG['port']}/{DB_CONFIG['database']}?charset={DB_CONFIG['charset']}"
-            f"&collation={DB_CONFIG['collation']}"
         )
         with engine.connect():
             print("数据库连接成功")
@@ -99,11 +92,9 @@ def extract_data(html_source):
                     continue
                 rank = int(rank_match.group())
 
-                # 处理总分
                 overall_score = card.select_one(".left-div-200 .light-blue .rank-score").get_text(strip=True)
                 overall_score = re.sub(r'[^\d.]', '', overall_score)
 
-                # 处理大学名称和地址
                 university_name = card.select_one(".right-div-200 .uni-link").get_text(strip=True)
                 location_tag = card.select_one(".right-div-200 .location")
                 location = location_tag.get_text(strip=True) if location_tag else ""
@@ -118,46 +109,61 @@ def extract_data(html_source):
             except Exception as e:
                 print(f"单条数据提取失败: {e}")
                 continue
-        print(f"成功提取 {len(page_data)} 条原始数据（已处理并列排名）")
+        print(f"成功提取 {len(page_data)} 条数据")
     except Exception as e:
         print(f"数据提取失败: {e}")
     return pd.DataFrame(page_data)
 
+def check_existing_data(engine, crawl_date):
+    try:
+        with engine.connect() as conn:
+            result = conn.execute(
+                text("SELECT COUNT(*) FROM university_rank WHERE crawl_date = :date"),
+                {"date": crawl_date}
+            )
+            return result.scalar() > 0
+    except exc.SQLAlchemyError as e:
+        print(f"检查已有数据失败: {str(e)}")
+        return False
 
-def upsert_to_database(df, engine):
+def insert_to_database(df, engine, crawl_date):
     if df is None or df.empty or engine is None:
         print("无数据可写入")
         return False
+
+    df['crawl_date'] = crawl_date
 
     temp_table = "temp_university_rank"
     conn = None
     try:
         conn = engine.connect()
         trans = conn.begin()
+
         print(f"创建临时表 {temp_table}...")
         create_temp_sql = f"""
-                          CREATE TABLE IF NOT EXISTS {temp_table} (
-                              university_name VARCHAR(255),
-                              `rank` INT NOT NULL,
-                              overall_score DECIMAL(10, 2),
-                              location VARCHAR(255)
-                          ) ENGINE = InnoDB
-                            DEFAULT CHARSET = :charset
-                            COLLATE = :collation;
-                          """
+            CREATE TABLE IF NOT EXISTS {temp_table} (
+                university_name VARCHAR(255) NOT NULL,
+                `rank` INT NOT NULL,
+                overall_score DECIMAL(10, 2),
+                location VARCHAR(255),
+                crawl_date DATE NOT NULL
+            ) ENGINE = InnoDB
+              DEFAULT CHARSET = :charset
+              COLLATE = :collation;
+        """
         conn.execute(text(create_temp_sql), {
             "charset": DB_CONFIG['charset'],
             "collation": DB_CONFIG['collation']
         })
         conn.execute(text(f"TRUNCATE TABLE {temp_table}"))
+
         df.to_sql(
             name=temp_table,
             con=conn,
-            if_exists='append',  # 使用append而不是replace，避免重建表导致排序规则变化
+            if_exists='append',
             index=False
         )
 
-        # 检查临时表数据量
         temp_count = conn.execute(text(f"SELECT COUNT(*) FROM {temp_table}")).scalar()
         if temp_count == 0:
             print("临时表无数据，终止写入")
@@ -165,29 +171,16 @@ def upsert_to_database(df, engine):
             return False
         print(f"临时表 {temp_table} 写入 {temp_count} 条数据")
 
-        # 2. 执行UPSERT写入正式表
-        print("开始向正式表写入数据...")
-        # 表名直接拼接到SQL中，不使用参数绑定
-        upsert_sql = f"""
-                                   INSERT INTO university_rank
-                                   (university_name, `rank`, overall_score, location, create_time, update_time)
-                                   SELECT university_name,
-                                          `rank`,
-                                          overall_score,
-                                          location,
-                                          IFNULL((SELECT create_time
-                                                  FROM university_rank
-                                                  WHERE university_name = temp.university_name), NOW()),
-                                          NOW()
-                                   FROM {temp_table} temp
-                                   ON DUPLICATE KEY UPDATE `rank`        = temp.`rank`,
-                                                           overall_score = temp.overall_score,
-                                                           location      = temp.location,
-                                                           update_time   = NOW()
-                                   """
-        result = conn.execute(text(upsert_sql))
-        trans.commit()  # 提交事务
-        print(f"正式表更新成功，影响行数: {result.rowcount}")
+        print("开始向正式表插入数据...")
+        insert_sql = f"""
+            INSERT INTO university_rank 
+            (university_name, `rank`, overall_score, location, crawl_date)
+            SELECT university_name, `rank`, overall_score, location, crawl_date
+            FROM {temp_table}
+        """
+        result = conn.execute(text(insert_sql))
+        trans.commit()
+        print(f"正式表插入成功，新增 {result.rowcount} 条记录")
         return True
     except exc.SQLAlchemyError as e:
         print(f"数据库写入失败: {str(e)}")
@@ -205,10 +198,15 @@ def upsert_to_database(df, engine):
             finally:
                 conn.close()
 
-
-def scrape_and_save_to_db(keyword):
+def scrape_and_save_to_db():
     engine = init_database()
     if not engine:
+        return
+    today = date.today()
+    crawl_date = today.replace(day=1)  # 本月1号
+    print(f"本次爬取日期: {crawl_date}")
+    if check_existing_data(engine, crawl_date):
+        print(f"该日期({crawl_date})已存在数据，无需重复爬取")
         return
 
     browser = None
@@ -227,11 +225,14 @@ def scrape_and_save_to_db(keyword):
                              '//*[@id="newRankingFilters_newUI"]/div[3]/div[7]/div[1]/div[2]/div[2]/div[4]').click()
         time.sleep(5)
 
-        # 提取并写入数据
         df = extract_data(browser.page_source)
-        df.to_excel('QStop大学排名.xlsx', index=False)
+
+        excel_filename = f'QS大学排名_{crawl_date}.xlsx'
+        df.to_excel(excel_filename, index=False)
+        print(f"数据已保存到 {excel_filename}")
+
         if not df.empty:
-            upsert_to_database(df, engine)
+            insert_to_database(df, engine, crawl_date)
         print(f"总处理数据量: {len(df)}")
 
     except Exception as e:
@@ -240,4 +241,6 @@ def scrape_and_save_to_db(keyword):
         if browser:
             browser.quit()
 
-scrape_and_save_to_db('QStop')
+
+if __name__ == "__main__":
+    scrape_and_save_to_db()
