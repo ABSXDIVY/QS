@@ -44,7 +44,7 @@ def get_pages(keyword):
     service = Service(r'C:\Users\Administrator\miniconda3\Scripts\chromedriver.exe')
     browser = webdriver.Chrome(service=service)
     browser.maximize_window()
-    url = 'https://www.topuniversities.com/world-university-rankings/2024'
+    url = 'https://www.topuniversities.com/world-university-rankings/2025?items_per_page=150'
     browser.get(url)
 
     browser.find_element(By.XPATH, '//*[@id="it-will-be-fixed-top"]/div[2]/div/button/span[1]').click()

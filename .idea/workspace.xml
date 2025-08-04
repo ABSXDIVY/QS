@@ -5,9 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a9264d14-7c3e-4fe7-accd-172da3d54f66" name="更改" comment="feat">
+      <change afterPath="$PROJECT_DIR$/QS_R.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/2a504f79-84e2-455d-8d25-9795813c89ed.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/2a504f79-84e2-455d-8d25-9795813c89ed.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/QDtop.py" beforeDir="false" afterPath="$PROJECT_DIR$/QDtop.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/QS_SQL.py" beforeDir="false" afterPath="$PROJECT_DIR$/QS_SQL.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/QStop大学排名.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/QStop大学排名.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/QS大学排名_2025-08-01.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/QS大学排名_2025-08-01.xlsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +28,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "ABSXDIVY"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/ABSXDIVY/QS.git",
+    "accountId": "3059f609-ed5b-4215-b598-61d7b4dbec39"
+  }
+}]]></component>
   <component name="ProjectColorInfo"><![CDATA[{
   "associatedIndex": 1
 }]]></component>
@@ -37,12 +53,14 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.QDtop.executor": "Run",
     "Python.QDyop.executor": "Run",
+    "Python.QS_R.executor": "Run",
     "Python.QS_SQL.executor": "Run",
     "Python.SQL.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "master",
+    "grid.search.filter.rows": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -56,6 +74,36 @@
     ]
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="QS_R" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="PythonProject" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/QS_R.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.QS_R" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -71,7 +119,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1754273661750</updated>
-      <workItem from="1754273662813" duration="12938000" />
+      <workItem from="1754273662813" duration="18467000" />
     </task>
     <task id="LOCAL-00001" summary="feat">
       <option name="closed" value="true" />
@@ -81,7 +129,15 @@
       <option name="project" value="LOCAL" />
       <updated>1754291936800</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat">
+      <option name="closed" value="true" />
+      <created>1754292724677</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1754292724677</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -104,8 +160,9 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PythonProject$QDyop.coverage" NAME="QDyop 覆盖结果" MODIFIED="1754275815283" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PythonProject$QS_R.coverage" NAME="QS_R 覆盖结果" MODIFIED="1754293777052" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/PythonProject$SQL.coverage" NAME="SQL 覆盖结果" MODIFIED="1754287855596" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/PythonProject$QS_SQL.coverage" NAME="QS_SQL 覆盖结果" MODIFIED="1754292273805" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/PythonProject$QDtop.coverage" NAME="QDtop 覆盖结果" MODIFIED="1754276214482" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PythonProject$QS_SQL.coverage" NAME="QS_SQL 覆盖结果" MODIFIED="1754298078884" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/PythonProject$QDtop.coverage" NAME="QDtop 覆盖结果" MODIFIED="1754295322223" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

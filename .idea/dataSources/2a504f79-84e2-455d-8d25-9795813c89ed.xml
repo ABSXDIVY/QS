@@ -1016,7 +1016,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <Current>1</Current>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2025-08-04.07:25:11</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-08-04.09:01:13</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </schema>
     <schema id="292" parent="1" name="sys">
@@ -1041,67 +1041,5 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <Host>localhost</Host>
       <Plugin>caching_sha2_password</Plugin>
     </user>
-    <table id="297" parent="291" name="university_rank">
-      <DetailsLevel>3</DetailsLevel>
-      <Engine>InnoDB</Engine>
-      <CollationName>utf8mb4_unicode_ci</CollationName>
-    </table>
-    <column id="298" parent="297" name="id">
-      <AutoIncrement>256</AutoIncrement>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-      <StoredType>int|0s</StoredType>
-    </column>
-    <column id="299" parent="297" name="university_name">
-      <NotNull>1</NotNull>
-      <Position>2</Position>
-      <StoredType>varchar(255)|0s</StoredType>
-    </column>
-    <column id="300" parent="297" name="rank">
-      <NotNull>1</NotNull>
-      <Position>3</Position>
-      <StoredType>int|0s</StoredType>
-    </column>
-    <column id="301" parent="297" name="overall_score">
-      <Position>4</Position>
-      <StoredType>decimal(10,2 digit)|0s</StoredType>
-    </column>
-    <column id="302" parent="297" name="location">
-      <Position>5</Position>
-      <StoredType>varchar(255)|0s</StoredType>
-    </column>
-    <column id="303" parent="297" name="crawl_date">
-      <NotNull>1</NotNull>
-      <Position>6</Position>
-      <StoredType>date|0s</StoredType>
-    </column>
-    <column id="304" parent="297" name="create_time">
-      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
-      <NotNull>1</NotNull>
-      <Position>7</Position>
-      <StoredType>datetime|0s</StoredType>
-    </column>
-    <index id="305" parent="297" name="PRIMARY">
-      <ColNames>id</ColNames>
-      <Type>btree</Type>
-      <Unique>1</Unique>
-    </index>
-    <index id="306" parent="297" name="idx_university">
-      <ColNames>university_name</ColNames>
-      <Type>btree</Type>
-    </index>
-    <index id="307" parent="297" name="idx_rank">
-      <ColNames>rank</ColNames>
-      <Type>btree</Type>
-    </index>
-    <index id="308" parent="297" name="idx_crawl_date">
-      <ColNames>crawl_date</ColNames>
-      <Type>btree</Type>
-    </index>
-    <key id="309" parent="297" name="PRIMARY">
-      <NameSurrogate>1</NameSurrogate>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
-    </key>
   </database-model>
 </dataSource>
