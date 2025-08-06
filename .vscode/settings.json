@@ -1,0 +1,19 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "QS_SQL",
+            "group": "QS项目",
+            "database": "qs",
+            "username": "root",
+            "password": "xjtuse"
+        }
+    ]
+}
