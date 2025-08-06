@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-基金从业资格爬虫定时任务
-每天早上7点运行，8点前完成
-"""
-
 import schedule
 import time
 import subprocess
